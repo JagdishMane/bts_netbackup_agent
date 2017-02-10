@@ -43,7 +43,7 @@ bash "install_netbackup_package" do
 end
 
 remote_file "/tmp/netbackup-$$/#{site}.netbackup_servers"
-  source ""#{node['bts_netbackup_agent']['repo']/#{site}.netbackup_servers"
+  source "#{node['bts_netbackup_agent']['repo']/#{site}.netbackup_servers"
 end
 
 iplist.stdout.each do |ip|
