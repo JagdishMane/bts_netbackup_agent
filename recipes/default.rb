@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: bts-siem
+# Cookbook Name:: bts_netbackup_agent
 # Recipe:: default
 #
 # Copyright (c) 2017 The Authors, All Rights Reserved.
@@ -43,7 +43,7 @@ bash "install_netbackup_package" do
 end
 
 remote_file "/tmp/netbackup-$$/#{site}.netbackup_servers"
-  source "#{node['bts_netbackup_agent']['repo']/#{site}.netbackup_servers"
+  source "#{node['bts_netbackup_agent']['repo']}/#{site}.netbackup_servers"
 end
 
 iplist.stdout.each do |ip|
