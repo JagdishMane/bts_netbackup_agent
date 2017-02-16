@@ -1,4 +1,10 @@
 #
+# Cookbook Name:: bts-netbackup
+# Recipe:: default
+#
+# Copyright (c) 2017 Toyota - Cloud Automation
+
+#
 # Cookbook Name:: bts_netbackup_agent
 # Recipe:: default
 #
@@ -7,9 +13,9 @@
 require 'mixlib/shellout'
 
 # Is this running in TCD or TCX?
-net = node['default_gateway'].split(".")
+net = '60' #node['default_gateway'].split(".")
 
-case net[1]
+case net #[1]
 when "60"
   site = "tcd"
 when "61"
@@ -18,7 +24,10 @@ else
   return
 end
 
+
 iplist = Mixlib::ShellOut.new("/usr/sbin/ip addr show  | grep -Po 'inet \K[\d.]+' | grep -i 172 | grep -v 172.28")
+
+Chef::Log.info(iplist)
 
 if iplist.nil?
   Chef::Log.fatal("Netbackup backup interface is not configured.  Please plumb the interface and rerun this cookbook.  Exiting ...")
@@ -30,8 +39,8 @@ directory "/tmp/netbackup-$$" do
   action :create
 end
 
-remote_file "/tmp/netbackup-$$/netbackup-agent-latest.tar.gz"
-  source "#{node['bts_netbackup_agent']['repo']/software/linux/netbackup/linux/netbackup-agent-latest.tar.gz"
+remote_file "/tmp/netbackup-$$/netbackup-agent-latest.tar.gz" do
+  source "#{node['bts_netbackup_agent']['repo']}/software/linux/netbackup/linux/netbackup-agent-latest.tar.gz"
 end
 
 bash "install_netbackup_package" do
@@ -42,7 +51,7 @@ bash "install_netbackup_package" do
   EOH
 end
 
-remote_file "/tmp/netbackup-$$/#{site}.netbackup_servers"
+remote_file "/tmp/netbackup-$$/#{site}.netbackup_servers" do
   source "#{node['bts_netbackup_agent']['repo']}/#{site}.netbackup_servers"
 end
 
@@ -81,5 +90,3 @@ end
 directory "/tmp/netbackup-$$" do
   action :delete
 end
-
-
